@@ -1,0 +1,68 @@
+server:
+  port: 10111
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    max-active: 20
+    max-idle: 8
+    min-idle: 8
+    validation-query: SELECT 1
+    test-on-borrow: true
+  redis:
+    database: 0 # Database index used by the connection factory.
+    timeout: 0 # Connection timeout in milliseconds.
+    pool:
+      max-active: 8 # Max number of connections that can be allocated by the pool at a given time. Use a negative value for no limit.
+      max-idle: 8 # Max number of "idle" connections in the pool. Use a negative value to indicate an unlimited number of idle connections.
+      max-wait: -1 # Maximum amount of time (in milliseconds) a connection allocation should block before throwing an exception when the pool is exhausted. Use a negative value to block indefinitely.
+      min-idle: 1 # Target for the minimum number of idle connections to maintain in the pool. This setting only has an effect if it is positive.
+  aop:
+#    auto: true
+    proxy-target-class: true
+security:
+  oauth2:
+    client:
+      client-secret: dev
+      id: dev
+      access-token-uri: http://localhost:10111/oauth/token
+      user-authorization-uri: http://localhost:10111/oauth/authorize
+    resource:
+      user-info-uri: http://localhost:10111/me
+#      logout-uri: http://localhost:10111/revoke-token
+
+ehr:
+  pack-extractor:
+    event:
+      data-sets:
+        - HDSC01_02: Clinic #门诊-挂号 v1.0
+        - HDSD00_85: Clinic #门诊-挂号 v1.3
+        - HDSC02_09: Resident #住院-入院记录 v1.0
+        - HDSD00_13: Resident #住院-入院记录 v1.3
+        - HDSD00_16: Resident #住院-出院小结 v1.3
+        - HDSD00_11: Resident #住院-病案首页 v1.5
+        - HDSB05_03: MedicalExam #体检-登记信息 v1.3
+        - HDSD00_88: MaternalAndChild #妇幼 产前随访服务信息
+        - HDSD00_89: MaternalAndChild #妇幼 新生儿家庭访视信息
+      fuzzy-match:
+        - HDSB01_: MaternalAndChild #妇幼模糊匹配
+        - HDSB02_: MaternalAndChild #妇幼模糊匹配
+      clinic:
+        - HDSA00_01 #人口学信息
+        - HDSD00_85 #门诊-挂号
+        - HDSD00_73 #门诊-诊断记录
+        - HDSD00_71 #门诊-费用汇总
+        - HDSD00_70 #门诊-费用清单
+
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://172.19.103.42/db3?useUnicode:true&characterEncoding=utf-8&autoReconnect=true
+    username: esb
+    password: esb
+  redis:
+    host: 172.19.103.47
+    port: 6379
+    password: redis!@456
+
